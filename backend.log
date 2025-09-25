@@ -1,4 +1,3 @@
-nohup: ignoring input
 /data/data/com.termux/files/home/Buzzanator_FDF/buzzflow-cli/backend/server.js:10
 app.get('/health', (req# 1. Go to base Buzz repo
                        ^
