@@ -1,0 +1,58 @@
+#!/bin/bash
+# ==========================================
+# 🐝 BuzzFlow One-Shot Auto Workflow
+# Deploys Backend (Firebase), Frontend (WebFlow),
+# WordPress Hive theme, and Expo Mobile apps.
+# ==========================================
+
+set -e
+
+# 1️⃣ Setup
+cd ~/Buzzanator_FDF
+PROJECT=buzzcoreex
+REPO=https://github.com/figuripv6o/buzzflow-cli.git
+
+echo "🚀 BuzzFlow Auto Workflow — starting..."
+
+# 2️⃣ Pull latest repo
+rm -rf buzzflow-cli
+git clone $REPO
+cd buzzflow-cli
+
+# 3️⃣ Backend (Firebase Functions)
+cd backend
+npm install
+firebase use $PROJECT
+firebase deploy --only functions
+echo "✅ Backend deployed to Firebase Functions"
+
+# 4️⃣ Frontend (Firebase Hosting)
+cd ../webflow
+firebase use $PROJECT
+firebase deploy --only hosting
+echo "✅ Frontend deployed to Firebase Hosting"
+
+# 5️⃣ WordPress (WebPress Buzzomatic Hive)
+cd ..
+zip -r buzzflow-webpress.zip webflow
+echo "⚡ Upload buzzflow-webpress.zip into WordPress (Themes/Plugins)"
+
+# 6️⃣ Mobile App (Expo + EAS)
+cd mobile || mkdir mobile && cd mobile
+npx create-expo-app buzzflow-mobile --yes
+cd buzzflow-mobile
+npm install firebase expo-router react-native-webview
+eas build -p android --profile preview --non-interactive
+eas build -p ios --profile preview --non-interactive
+echo "📱 Mobile app builds queued on EAS"
+
+# 7️⃣ GitHub Push (auto-archive)
+cd ~/Buzzanator_FDF/buzzflow-cli
+git init
+git branch -M main
+git remote add origin $REPO
+git add .
+git commit -m '🚀 BuzzFlow E2E Auto Deploy — FDF Certified'
+git push -u origin main -f
+
+echo "🔥 One-Shot Deploy Complete: Web + Backend + App + Hive"
