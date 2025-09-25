@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>BuzzFlow Web</title>
+</head>
+<body style="font-family: Arial; text-align: center; margin-top: 50px;">
+  <h1>🚀 BuzzFlow Web Running</h1>
+  <p>Backend health check: <span id="status">loading...</span></p>
+  <script>
+    fetch("http://localhost:4000/health")
+      .then(res => res.json())
+      .then(data => document.getElementById("status").innerText = data.status)
+      .catch(() => document.getElementById("status").innerText = "offline");
+  </script>
+</body>
+</html>
